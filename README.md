@@ -1,1 +1,1 @@
-# my-salt-formula
+# Collection of Salt Formulas
