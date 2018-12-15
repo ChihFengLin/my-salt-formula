@@ -1,0 +1,130 @@
+ambari_properties:
+  
+  ########################
+  ## host configuration ##
+  ########################
+  hosts:
+    repo_server:
+      ipv4:
+      hostname: 
+      port:
+    database_server:
+      port: 3306
+
+  ###########################
+  ## cluster configuration ##
+  ###########################
+  ntp_service_name: chronyd
+  cluster_name: 'my_dev_cluster'
+  cluster_template_file: 'cluster_template.jinja'
+  ambari_admin_user: 'admin'
+  ambari_admin_default_password: 'admin'
+  ambari_admin_password: 'admin'
+  default_password: 'Welcome@12345'    
+  
+  repos:
+    ambari:
+      version: 2.7.1.0
+      major_version: 2
+      build_number: 169
+    hdp:
+      version: 3.0.1.0
+      major_version: 3
+      minor_version: 3.0
+      build_number: 187
+    hdp_utils:
+      version: 1.1.0.22
+
+  ####################################
+  ## database configuration (MYSQL) ##
+  ####################################
+  database_configurations:
+
+    database_type: mysql
+
+    mysql:
+      jdbc_location: /usr/share/java/mysql-connector-java.jar
+      port: 3306
+      packages:
+        - MySQL-python
+        - mysql-connector-java
+    
+    mysql_rpm:
+      rhel_five: http://repo.mysql.com/mysql57-community-release-el5.rpm
+      rhel_six: http://repo.mysql.com/mysql57-community-release-el6.rpm
+      rhel_seven: http://repo.mysql.com/mysql57-community-release-el7.rpm
+    
+    mysql_config:
+      server_pkg: mysql-community-server
+      client_pkg: mysql-community-client
+      python_pkg: MySQL-python
+      service: mysqld
+      config: /etc/my.cnf
+      data_root_dir: /var/lib/mysql
+      log_file: /var/log/mysqld.log
+      flag_file_path: /tmp/mysql_flag
+      root_user: root
+      root_password: aA123456789++
+      ssl:
+        enabled: False
+        ca_file: /etc/mysql/cacert.pem
+        cert_file: /etc/mysql/server-cert.pem
+        key_file: /etc/mysql/server-key.pem
+        client_cert_file: /etc/mysql/client-cert.pem
+        client_key_file: /etc/mysql/client-key.pem
+
+    database_options:
+      ambari:
+        db_name: 'ambari'
+        db_password: 'Big@data123'
+      hive:  
+        db_name: 'hive'
+        db_password: 'Hive@123'
+      ranger:  
+        db_name: 'ranger'
+        db_password: 'Ranger@123'
+      rangerkms: 
+        db_name: 'rangerkms'
+        db_password: 'Rangerkms@123'
+  
+
+  ########################
+  ## java configuration ##
+  ########################
+  java_configurations:
+    openjdk_path: /usr/lib/jvm/java-1.8.0-openjdk
+
+  #####################################
+  ## kerberos security configuration ##
+  #####################################
+  security: 'none'                                          # can be set to 'none', 'mit-kdc' or 'active-directory'
+  security_options:
+    external_hostname: ''                                   # if this is empty, Ansible will install and prepare the MIT KDC on the Ambari node
+    realm: 'EXAMPLE.COM'
+    admin_principal: 'admin'                                # the Kerberos principal that has the permissions to create new users (don't append the realm)
+    admin_password: 'Welcome@12345' 
+    kdc_master_key: 'Welcome@12345'                          # only used when security is set to 'mit-kdc'
+    ldap_url: 'ldaps://ad.example.com:636'                  # only used when security is set to 'active-directory'
+    container_dn: 'OU=hadoop,DC=example,DC=com'             # only used when security is set to 'active-directory'
+    http_authentication: yes                                # set to yes to enable HTTP authentication (SPNEGO)
+
+  ##########################
+  ## ranger configuration ##                                # only useful if blueprint is dynamic
+  ##########################
+  ranger_options:                                           # only used if RANGER_ADMIN is part of the blueprint stack
+    enable_plugins: yes                                     # set to 'yes' if the plugins should be enabled for all of the installed services
+
+  ranger_security_options:                                  # only used if RANGER_ADMIN is part of the blueprint stack
+    ranger_admin_password: 'Welcome@12345'                   # the password for the Ranger admin users (both admin and amb_ranger_admin)
+    ranger_keyadmin_password: 'Welcome@12345'                # the password for the Ranger keyadmin user (will only be set in HDP3, in HDP2 it will remain the default keyadmin)
+    kms_master_key_password: 'Welcome@12345'                 # password used for encrypting the Master Key
+
+  ##################################
+  ## other security configuration ##                         # only useful if blueprint is dynamic
+  ##################################
+                         
+  atlas_security_options:
+    admin_password: 'Welcome@12345'                          # the password for the Atlas admin user
+  
+  knox_security_options:
+    master_secret: 'Welcome@12345'                           # Knox Master Secret

@@ -1,0 +1,224 @@
+## Specific configuration for Ambari Server
+ambari_server_conf:
+  admin_user: admin
+  admin_password: admin
+  admin_default_password: admin
+
+  ## Should the ambari server be automatically started and enabled
+  ## if false, status/state unchanged
+  start_service: False
+  # log4j template
+  log:
+    dir: /var/log/ambari-server
+
+  ## server configuration in ambari.properties
+  agent:
+    package:
+      install:
+        task:
+          timeout: 1800
+    stack:
+      retry:
+        on_repo_unavailability: false
+        tries: 5
+    task:
+      timeout: 900
+    threadpool:
+      size:
+        max: 25
+  ambari_server:
+    user: root
+  ambari:
+    python:
+      wrap: ambari-python-wrap
+    ldap:
+      isConfigured: false
+  api:
+    authenticate: true
+  authentication:
+    ldap:
+      baseDn:
+      bindAnonymously:
+      dnAttribute:
+      groupMembershipAttr:
+      groupNamingAttr:
+      groupObjectClass:
+      managerDn:
+      managerPassword: /etc/ambari-server/conf/ldap-password.dat
+      primaryUrl:
+      secondaryUrl:
+      referral:
+      usernameAttribute:
+      userObjectClass:
+      useSSL:
+  bootstrap:
+    dir: /var/run/ambari-server/bootstrap
+    script: /usr/lib/python2.6/site-packages/ambari_server/bootstrap.py
+    setup_agent:
+      script: /usr/lib/python2.6/site-packages/ambari_server/setupAgent.py
+  client:
+    threadpool:
+      size:
+        max: 25
+  common:
+    services:
+      path: /var/lib/ambari-server/resources/common-services
+  custom:
+    action:
+      definitions: /var/lib/ambari-server/resources/custom_action_definitions
+  http:
+    strict_transport_security: max-age=31536000
+    x_xss_protection: 1; mode=block
+    x_frame_options: DENY
+  java:
+    home: /usr/jdk64/jdk1.8.0_60
+    releases: jdk1.8,jdk1.7
+  jce:
+    name: jce_policy-8.zip
+    download:
+      supported: True
+  jdk:
+    name: jdk-8u60-linux-x64.tar.gz
+    download:
+      supported: True
+  jdk1_8:
+    desc: Oracle JDK 1.8 + Java Cryptography Extension (JCE) Policy Files 8
+    dest_file: jdk-8u60-linux-x64.tar.gz
+    home: /usr/jdk64/
+    jcpol_file: jce_policy-8.zip
+    jcpol_url: http://public-repo-1.hortonworks.com/ARTIFACTS/jce_policy-8.zip
+    re: (jdk.*)/jre
+    url: http://public-repo-1.hortonworks.com/ARTIFACTS/jdk-8u60-linux-x64.tar.gz
+  kerberos:
+    keytab:
+      cache:
+        dir: /var/lib/ambari-server/data/cache
+      path: /etc/security/keytabs/ambari.server.keytab
+    principal: ambari-server@EXAMPLE.COM
+  metadata:
+    path: /var/lib/ambari-server/resources/stacks
+  recommendations:
+    dir: /var/run/ambari-server/stack-recommendations
+  recovery:
+    type: AUTO_START
+    enabled_components: METRICS_COLLECTOR
+    lifetime_max_count: 1024
+  resources:
+    dir: /var/lib/ambari-server/resources
+  rolling:
+    upgrade:
+      min:
+        stack: HDP-2.2
+      max:
+        stack:
+      skip:
+        packages:
+          prefixes:
+  security:
+    server:
+      keys_dir: /var/lib/ambari-server/keys
+      disabled:
+        protocols:
+        ciphers:
+  server:
+    connection:
+      max:
+        idle:
+          millis: 900000
+    ecCacheSizeValue:
+    execution:
+      scheduler:
+        isClustered: false
+        maxDbConnections: 5
+        maxThreads: 5
+        misfire:
+          toleration:
+            minutes: 480
+    fqdn:
+      service:
+        url: http://169.254.169.254/latest/meta-data/public-hostname
+    http:
+      session:
+        inactive_timeout: 1800
+    jdbc:
+      connection_pool:
+        acquisition_size:
+        max_age:
+        max_idle_time:
+        max_idle_time_excess:
+        idle_test_interval:
+      database: postgres
+      database_name: ambari
+      driver: org.postgresql.Driver
+      hostname: localhost
+      port: 5432
+      url: jdbc:postgresql://debian7-1.glinmac.dev:5432/ambari
+      postgres:
+        schema: ambari
+      user:
+        name: ambari
+        passwd: /etc/ambari-server/conf/password.dat
+      rca:
+        driver: org.postgresql.Driver
+        url: jdbc:postgresql://debian7-1.glinmac.dev:5432/ambari
+        user:
+          name: ambari
+          passwd: /etc/ambari-server/conf/password.dat
+    persistence:
+      type: local
+    stages:
+      parallel: true
+    startup:
+      web:
+        timeout: 120
+    task:
+      timeout: 1200
+    tmp:
+      dir: /var/lib/ambari-server/data/tmp
+    version:
+      file: /var/lib/ambari-server/resources/version
+  shared:
+    resources:
+      dir: /usr/lib/ambari-server/lib/ambari_commons/resources
+  skip:
+    service:
+      checks: false
+  ssl:
+    trustStore:
+      password:
+      path:
+      type:
+  stackadvisor:
+    script: /var/lib/ambari-server/resources/scripts/stack_advisor.py
+  ulimit:
+    open:
+      files: 10000
+  user:
+    inactivity:
+      timeout:
+        default: 0
+        role:
+          readonly:
+            default: 0
+  views:
+    ambari:
+      request:
+        connect:
+          timeout:
+            millis: 5000
+        read:
+          timeout:
+            millis: 10000
+    http:
+      strict_transport_security: max-age=31536000
+      x_xss_protection: 1; mode=block
+      x_frame_options: SAMEORIGIN
+    request:
+      connect:
+        timeout:
+          millis: 5000
+      read:
+        timeout:
+          millis: 10000
+  webapp:
+    dir: /usr/lib/ambari-server/web

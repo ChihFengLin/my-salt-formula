@@ -1,0 +1,60 @@
+blueprint_name: 'my_first_blueprint'
+blueprint_file: 'blueprint_dynamic.jinja'
+blueprint_dynamic:
+  - host_group: 'hdp_management'
+    instances: 1
+    clients:  ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'PIG', 'SQOOP', 'HIVE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
+    services:
+      - ZOOKEEPER_SERVER
+      - JOURNALNODE
+      - AMBARI_SERVER
+      - INFRA_SOLR
+      - RANGER_ADMIN
+      - RANGER_USERSYNC
+      - METRICS_COLLECTOR
+      - METRICS_GRAFANA
+      - METRICS_MONITOR
+      - HISTORYSERVER
+      - SPARK2_JOBHISTORYSERVER
+      - APP_TIMELINE_SERVER
+  - host_group: 'hdp_masternode_01'
+    instances: 1
+    clients: ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'PIG', 'SQOOP', 'HIVE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
+    services:
+      - ZOOKEEPER_SERVER
+      - NAMENODE
+      - ZKFC
+      - JOURNALNODE
+      - RESOURCEMANAGER
+      - HBASE_MASTER
+      - HIVE_SERVER
+      - HIVE_METASTORE
+      - WEBHCAT_SERVER
+      - METRICS_MONITOR
+      - INFRA_SOLR
+  - host_group: 'hdp_masternode_02'
+    instances: 1
+    clients:  ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'PIG', 'SQOOP', 'HIVE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
+    services:
+      - ZOOKEEPER_SERVER
+      - NAMENODE
+      - ZKFC
+      - JOURNALNODE
+      - RESOURCEMANAGER
+      - HBASE_MASTER
+      - HIVE_SERVER
+      - HIVE_METASTORE
+      - METRICS_MONITOR
+      - INFRA_SOLR
+  - host_group: 'hdp_worker'
+    instances: 3
+    clients: ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'PIG', 'SQOOP', 'HIVE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
+    services:
+      - DATANODE
+      - NODEMANAGER
+      - HBASE_REGIONSERVER
+      - METRICS_MONITOR
+  - host_group: 'hdp_edge'
+    instances: 1
+    clients: ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'PIG', 'SQOOP', 'HIVE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
+    services: []

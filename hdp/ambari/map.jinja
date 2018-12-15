@@ -1,0 +1,62 @@
+{% import_yaml 'hdp/ambari/defaults.yaml' as defaults %}
+{% import_yaml 'hdp/ambari/server.yaml' as ambari_server %}
+{% import_yaml 'hdp/ambari/agent.yaml' as ambari_agent %}
+{% import_yaml 'hdp/ambari/blueprint.yaml' as blueprint %}
+
+
+{# merge secret data #}
+{%- set lookup = salt['pillar.get'](
+    'ambari:lookup', default={}, merge=True) 
+%}
+{% do defaults.ambari_properties.update(lookup) %}
+
+{# merge server and agent confs into defaults #}
+{% do defaults.ambari_properties.update(ambari_server) %}
+{% do defaults.ambari_properties.update(ambari_agent) %}
+{% do defaults.ambari_properties.update(blueprint) %}
+
+{# merge all #}
+{%- set ambari_props = salt['pillar.get'](
+    'ambari', 
+    default=defaults['ambari_properties'], 
+    merge=true
+) %}
+
+{# mysql configuration #}
+{%- set mysql_config = defaults.ambari_properties.database_configurations.mysql_config %}
+{%- set mysql_rpm = defaults.ambari_properties.database_configurations.mysql_rpm %}
+{%- set mysql = salt['grains.filter_by'](
+    {
+        'RedHat': {
+            'server_pkg': mysql_config.server_pkg,
+            'client_pkg': mysql_config.client_pkg,
+            'python_pkg': mysql_config.python_pkg,
+            'service': mysql_config.service,
+            'config': mysql_config.config,
+            'data_root_dir': mysql_config.data_root_dir,
+            'log_file': mysql_config.log_file,
+            'root_user': mysql_config.root_user,
+            'root_password': mysql_config.root_password,
+            'ssl': mysql_config.ssl,
+            'flag_file_path': mysql_config.flag_file_path,
+        }
+    }
+) %}
+
+{%- if grains['os_family'] == 'RedHat' %}
+{%- if grains['osmajorrelease']|int == 5 %}
+{%- set rpm_source = mysql_rpm.rhel_five %}
+{%- elif grains['osmajorrelease']|int == 6 %}
+{%- set rpm_source = mysql_rpm.rhel_six %}
+{%- elif grains['osmajorrelease']|int == 7 %}
+{%- set rpm_source = mysql_rpm.rhel_seven %}
+{%- endif %}
+{%- endif %}
+
+# A lookup table for MySQL Repo GPG keys & RPM URLs for various RedHat releases
+{%- set rpm_pkg = {
+        'key': 'http://repo.mysql.com/RPM-GPG-KEY-mysql',
+        'key_hash': 'md5=472a4a4867adfd31a68e8c9bbfacc23d',
+        'rpm': rpm_source
+    } 
+%}
