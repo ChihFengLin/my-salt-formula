@@ -1,0 +1,37 @@
+{%- from 'hdp/ambari/map.jinja' import ambari_props with context %}
+{
+  "blueprint" : "{{ ambari_props.blueprint_name }}",
+  "config_recommendation_strategy" : "NEVER_APPLY",
+  "repository_version_id": "{{ vdf_id }}",
+  "default_password" : "{{ ambari_props.default_password }}",
+
+{% if security|lower == "mit-kdc" or security|lower == "active-directory" %}
+  "credentials" : [
+    {
+      "alias" : "kdc.admin.credential",
+{% if security|lower == "mit-kdc" %}
+      "principal" : "{{ security_options.admin_principal }}/admin@{{ security_options.realm | upper }}",
+{% endif %}
+{% if security|lower == "active-directory" %}
+      "principal" : "{{ security_options.admin_principal }}@{{ security_options.realm | upper }}",
+{% endif %}
+      "key" : "{{ security_options.admin_password }}",
+      "type" : "TEMPORARY"
+    }
+  ],
+  "security" : {
+    "type" : "KERBEROS"
+  },
+{% endif %}
+  {% set index = 0 %}
+  "host_groups": [{% for group_name, hosts in host_groups.iteritems() %}
+    {  
+      "name": "{{ group_name }}",
+      "hosts": [{% for host in hosts %}
+        {
+            "fqdn": "{{ host }}"
+        }{% if not loop.last %},{% endif %}{% endfor %}
+      ]
+    }{% if not loop.last %},{% endif %}{% endfor %}
+  ]
+}
