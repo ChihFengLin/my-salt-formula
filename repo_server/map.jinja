@@ -1,0 +1,56 @@
+{% import_yaml "repo_server/defaults.yaml" as defaults %}
+{% set repo_properties = defaults.repo_properties %}
+
+{% set ambari = repo_properties.ambari %}
+{% set hdp = repo_properties.hdp %}
+{% set hdp_utils = repo_properties.hdp_utils %}
+
+{% set base_url = 'public-repo-1.hortonworks.com' %}
+
+{%- if grains['os_family'] == 'RedHat' %}
+{%- if grains['osmajorrelease']|int == 7 %}
+
+{%- set ambari_url = 
+    'http://%s/ambari/centos7/%s.x/updates/%s/ambari-%s-centos7.tar.gz' % 
+    (base_url, ambari.major_version, ambari.version, ambari.version) 
+%}
+
+{%- set hdp_url =
+    'http://%s/HDP/centos7/%s.x/updates/%s/HDP-%s-centos7-rpm.tar.gz' %
+    (base_url, hdp.major_version, hdp.version, hdp.version)
+%}
+
+{%- set hdp_vdf_url =
+    'http://%s/HDP/centos7/%s.x/updates/%s/HDP-%s-%s.xml' %
+    (base_url, hdp.major_version, hdp.version, hdp.version, hdp.build_number)
+%}
+
+{%- set hdp_gpl_url =
+    'http://%s/HDP-GPL/centos7/%s.x/updates/%s/HDP-GPL-%s-centos7-gpl.tar.gz' %
+    (base_url, hdp.major_version, hdp.version, hdp.version)
+%}
+
+
+{%- set hdp_utils_url =
+    'http://%s/HDP-UTILS-%s/repos/centos7/HDP-UTILS-%s-centos7.tar.gz' %
+    (base_url, hdp_utils.version, hdp_utils.version)
+%}
+
+{%- endif %}
+{%- endif %}
+
+{%- set repo_server = salt['grains.filter_by'](
+    {
+        'RedHat': {
+            'repo_destination': '/etc/yum.repos.d',
+            'httpd_root': '/var/www/html',
+            'ambari_url': ambari_url,
+            'hdp_url': hdp_url,
+            'hdp_gpl_url': hdp_gpl_url,
+            'hdp_utils_url': hdp_utils_url,
+            'hdp_vdf_url': hdp_vdf_url,
+        }
+    }
+) %}
+
+{% set repos = defaults.repos %}
