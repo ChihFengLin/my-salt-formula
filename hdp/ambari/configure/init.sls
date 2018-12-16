@@ -54,8 +54,9 @@ enable_user_home_directory_creation:
       - ambari.post.user.creation.hook=/var/lib/ambari-server/resources/scripts/post-user-creation-hook.sh
 
 
+{%- set ip_dict = salt['mine.get']('*', 'network.ip_addrs') | dictsort(false, 'value') %}
 {% set i = 0 %}
-{%- for server_name, addr in salt['mine.get']('*', 'network.ip_addrs').items() %}
+{%- for server_name, addr in ip_dict %}
 {% if i != 0 %}
 make_sure_Ambari_Agents_{{ server_name }}_has_registered:
   http.query:
