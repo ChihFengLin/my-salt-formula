@@ -21,7 +21,8 @@ include:
   decode=True
 ) %}
 
-{% if not response['status'] == 200 %}
+{% set response_items = response['body'] | load_json | traverse('items') %}
+{% if response_items | length == 0 %}
 generate_HDP_Version_Definition_file:
   file.managed:
     - name: /tmp/cluster_vdf.xml
@@ -41,7 +42,7 @@ register_the_VDF_with_Ambari:
     - method: POST
     - data: " {\"VersionDefinition\":{\"version_url\":\"file:/tmp/cluster_vdf.xml\"}}"
     - verify_ssl: False
-    - status: 200
+    - status: 201
     - require:
       - service: ambari_server_svc
 {% endif %}
