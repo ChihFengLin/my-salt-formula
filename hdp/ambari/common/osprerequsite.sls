@@ -5,9 +5,10 @@ make sure ntp service is started:
     - name: {{ ambari_props.ntp_service_name }}
     - enable: True
 
-disableselinux:
-  selinux.mode:
-    - name: permissive
+#disableselinux:
+#  selinux.mode:
+#    - name: permissive
+
 make sure /etc/security/limits.d exists:
   file.directory:
     - name: /etc/security/limits.d
