@@ -45,6 +45,16 @@ register_the_VDF_with_Ambari:
     - status: 201
     - require:
       - service: ambari_server_svc
+{% else %}
+
+{% set vdf_id = response_items[0]['VersionDefinition']['id'] %} 
+
+add_vdf_id_to_grain:
+  grains.present:
+    - name: blueprint:vdf_id
+    - value: {{ vdf_id }}
+    - force: True
+
 {% endif %}
 
 enable_user_home_directory_creation:
