@@ -56,9 +56,7 @@ enable_user_home_directory_creation:
 
 
 {%- set ip_dict = salt['mine.get']('*', 'network.ip_addrs') | dictsort(false, 'value') %}
-{% set i = 0 %}
 {%- for server_name, addr in ip_dict %}
-{% if i != 0 %}
 make_sure_Ambari_Agents_{{ server_name }}_has_registered:
   http.query:
     - name: http://{{ grains.host }}:8080/api/v1/hosts/{{ server_name }}
@@ -68,6 +66,4 @@ make_sure_Ambari_Agents_{{ server_name }}_has_registered:
     - method: GET
     - verify_ssl: False
     - status: 200
-{% endif %}
-{% set i = i + 1 %}
 {% endfor %}

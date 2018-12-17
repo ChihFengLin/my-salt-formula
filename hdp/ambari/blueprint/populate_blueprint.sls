@@ -88,7 +88,7 @@ add_host_groups_to_grain:
 # Generate cluster template and blueprint json files
 generate_cluster_template_file:
   file.managed:
-    - name: /tmp/cluster_template.json
+    - name: /tmp/{{ ambari_props.cluster_template_file | replace('jinja', 'json') }}
     - source: salt://hdp/ambari/blueprint/files/{{ ambari_props.cluster_template_file }}
     - template: jinja
     - mode: 0640
@@ -249,7 +249,7 @@ add_service_groups_to_grain:
 
 generate_blueprint_dynamic_file:
   file.managed:
-    - name: /tmp/blueprint_dynamic.json
+    - name: /tmp/{{ ambari_props.blueprint_file | replace('jinja', 'json') }}
     - source: salt://hdp/ambari/blueprint/files/{{ ambari_props.blueprint_file }}
     - template: jinja
     - mode: 0640
