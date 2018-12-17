@@ -1,2 +1,2 @@
 include:
-  - hdp.ambari.blueprint.populate_host_groups
+  - hdp.ambari.blueprint.populate_blueprint
